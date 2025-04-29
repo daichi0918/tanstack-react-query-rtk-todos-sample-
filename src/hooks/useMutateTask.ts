@@ -9,7 +9,7 @@ export const useMutateTask = () => {
   const dispatch = useAppDispatch()
   const queryClient = useQueryClient()
 
-  const createTaskMutation = useMutation(
+  const createTaskMutation = useMutation<Task, Error, Omit<EditTask, 'id'>>(
     // @ts-ignore
     (task: Omit<EditTask, 'id'>) =>
       axios.post<Task>(`${process.env.REACT_APP_REST_URL}/tasks/`, task),
@@ -27,22 +27,21 @@ export const useMutateTask = () => {
       },
     },
   )
-  const updateTaskMutation = useMutation(
+  const updateTaskMutation = useMutation<Task, Error, EditTask>(
     // @ts-ignore
-    (task: EditTask) =>
-      axios.put<Task>(
-        `${process.env.REACT_APP_REST_URL}/tasks/${task.id}/`,
-        task,
-      ),
+    (task: EditTask) => {
+      return axios
+        .put<Task>(`${process.env.REACT_APP_REST_URL}/tasks/${task.id}/`, task)
+        .then((res) => res.data)
+    },
     {
-      // @ts-ignore
-      onSuccess: (res, variables) => {
+      onSuccess: (res: any, variables: any) => {
         const previousTodos = queryClient.getQueryData<Task[]>(['tasks'])
         if (previousTodos) {
           queryClient.setQueryData<Task[]>(
             ['tasks'],
             previousTodos.map((task) =>
-              task.id === variables.id ? res.data : task,
+              task.id === variables.id ? res : task,
             ),
           )
         }
@@ -50,7 +49,7 @@ export const useMutateTask = () => {
       },
     },
   )
-  const deleteTaskMutation = useMutation(
+  const deleteTaskMutation = useMutation<void, Error, number>(
     // @ts-ignore
     (id: number) =>
       axios.delete(`${process.env.REACT_APP_REST_URL}/tasks/${id}/`),

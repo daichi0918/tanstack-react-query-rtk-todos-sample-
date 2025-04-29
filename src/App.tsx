@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
   },
 })
 
-const App: FC = () => {
+export const App: FC = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center font-mono text-sm text-gray-600">
       <QueryClientProvider client={queryClient}>
@@ -29,5 +29,3 @@ const App: FC = () => {
     </div>
   )
 }
-
-export default App

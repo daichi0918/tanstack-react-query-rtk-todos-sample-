@@ -11,10 +11,8 @@ const TaskEdit: FC = () => {
   const { createTaskMutation, updateTaskMutation } = useMutateTask()
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // @ts-ignore
     if (editedTask.id === 0) createTaskMutation.mutate(editedTask)
     else {
-      // @ts-ignore
       updateTaskMutation.mutate(editedTask)
     }
   }
