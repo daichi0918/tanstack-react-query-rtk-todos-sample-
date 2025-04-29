@@ -43,7 +43,7 @@ export const useMutateTag = () => {
       },
     },
   )
-  const deleteTagMutation = useMutation(
+  const deleteTagMutation = useMutation<void, Error, number>(
     // @ts-ignore
     (id: number) =>
       axios.delete(`${process.env.REACT_APP_REST_URL}/tags/${id}/`),
